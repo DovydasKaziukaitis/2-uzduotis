@@ -66,31 +66,37 @@ std::vector<Student> read_students(const std::string& path) {
     return out;
 }
 
-void print_table(const std::vector<Student>& s, Mode m) {
+std::list<Student> read_students_list(const std::string& path) {
+    auto v = read_students(path);
+    std::list<Student> out;
+    for (auto &st : v) out.push_back(std::move(st));
+    return out;
+}
+
+void print_table(const std::list<Student>& s, Mode m) {
     std::cout << std::left << std::setw(12) << "Pavarde"
               << std::setw(12) << "Vardas";
     if (m == Mode::Vid) std::cout << std::right << std::setw(14) << "Galutinis(Vid)";
     else                std::cout << std::right << std::setw(14) << "Galutinis(Med)";
-    std::cout << "\n" << std::string(40, '-') << "\n";
-    std::cout << std::fixed << std::setprecision(2);
+    std::cout << "\n" << std::string(40, '-') << "\n"
+              << std::fixed << std::setprecision(2);
+
     int shown = 0;
     for (const auto& st : s) {
-        std::cout << std::left << std::setw(12) << st.pav
+        std::cout << std::left  << std::setw(12) << st.pav
                   << std::setw(12) << st.var
                   << std::right << std::setw(14)
-                  << (m == Mode::Vid ? st.galVid : st.galMed)
-                  << "\n";
+                  << (m == Mode::Vid ? st.galVid : st.galMed) << "\n";
         if (++shown == 5) break;
     }
 }
 
-void split_and_write(const std::vector<Student>& s, Mode m) {
-    std::vector<Student> varg, kiet;
-    varg.reserve(s.size());
-    kiet.reserve(s.size());
+void split_and_write(const std::list<Student>& s, Mode m) {
+    std::list<Student> varg, kiet;
     for (const auto& st : s) {
         double v = (m == Mode::Vid ? st.galVid : st.galMed);
-        (v < 5.0 ? varg : kiet).push_back(st);
+        if (v < 5.0) varg.push_back(st);
+        else         kiet.push_back(st);
     }
     write_group("vargsiukai.txt", varg, m);
     write_group("kietiakiai.txt", kiet, m);
