@@ -10,5 +10,3 @@ struct Student {
 
 enum class Mode { Vid = 1, Med = 2 };
 
-
-
