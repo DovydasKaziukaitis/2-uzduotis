@@ -1,0 +1,183 @@
+#include <iostream>
+#include <string>
+#include <vector>
+#include <list>
+#include <algorithm>
+#include <chrono>
+#include "student1.h"
+#include "io1.h"
+#include "utils1.h"
+#include <iomanip>
+
+static void vektoriausSpartosTestas(const std::string& path, Mode m);
+static void sarasoSpartosTestas    (const std::string& path, Mode m);
+
+int main(int argc, char** argv) {
+    Mode mode = Mode::Vid;
+    std::string dump;
+
+    while (true) {
+        std::cout << "\n=== MENIU ===\n"
+                  << "1) Skaityti is failo\n"
+                  << "2) Demo: sugeneruoti 5 ir parodyti\n"
+                  << "3) Generuoti N ir padalinti i failus\n"
+                  << "4) Keisti rezima (1-Vid, 2-Med; dabar: " << (mode==Mode::Vid?"Vid":"Med") << ")\n"
+                  << "5) Spartos testas (vector)\n"
+                  << "6) Spartos testas (list)\n"
+                  << "0) Baigti\n"
+                  << "Pasirinkite: ";
+
+        int mnu;
+        if (!(std::cin >> mnu)) return 0;
+        std::getline(std::cin, dump);
+
+        if (mnu == 0) break;
+
+        if (mnu == 4) {
+            std::cout << "Naujas rezimas (1-Vid, 2-Med): ";
+            int x; if (!(std::cin >> x)) return 0;
+            std::getline(std::cin, dump);
+            mode = (x == 2 ? Mode::Med : Mode::Vid);
+            continue;
+        }
+
+        if (mnu == 1) {
+            std::string path = (argc >= 2 ? argv[1] : "");
+            if (path.empty()) { std::cout << "Failo kelias: "; std::getline(std::cin, path); }
+
+            auto s = studentuSkaitymas(path);
+            std::cerr << "Uzkrauta irasu: " << s.size() << "\n";
+            lentelesSpausdinimas(s, mode);
+            padalinimasIrIrasymas(s, mode);
+            continue;
+        }
+
+        if (mnu == 2) {
+            auto s = studentuGeneravimas(5);
+            lentelesSpausdinimas(s, mode);
+            continue;
+        }
+
+        if (mnu == 3) {
+            int n; std::cout << "Kiek generuoti?: ";
+            if (!(std::cin >> n) || n <= 0) { std::getline(std::cin, dump); continue; }
+            std::getline(std::cin, dump);
+            auto s = studentuGeneravimas(n);
+            padalinimasIrIrasymas(s, mode);
+            std::cout << "Isvestis: vargsiukai.txt, kietiakiai.txt\n";
+            continue;
+        }
+
+        if (mnu == 5) {
+            std::string path = (argc >= 2 ? argv[1] : "");
+            if (path.empty()) { std::cout << "Failo kelias: "; std::getline(std::cin, path); }
+            vektoriausSpartosTestas(path, mode);
+            continue;
+        }
+
+        if (mnu == 6) {
+            std::string path = (argc >= 2 ? argv[1] : "");
+            if (path.empty()) { std::cout << "Failo kelias: "; std::getline(std::cin, path); }
+            sarasoSpartosTestas(path, mode);
+            continue;
+        }
+
+        std::cout << "Blogas pasirinkimas\n";
+    }
+    return 0;
+}
+
+static void vektoriausSpartosTestas(const std::string& path, Mode m) {
+    using clock = std::chrono::high_resolution_clock;
+    auto now = []{ return clock::now(); };
+    auto ms  = [](auto d){ using namespace std::chrono;
+                           return duration_cast<microseconds>(d).count()/1000.0; };
+
+    auto t_all0 = now();
+
+    auto t0 = now();
+    auto s = studentuSkaitymas(path);
+    auto t_read = now() - t0;
+
+    t0 = now();
+    std::sort(s.begin(), s.end(), [](const Student& a, const Student& b){
+        if (a.pav != b.pav) return a.pav < b.pav;
+        return a.var < b.var;
+    });
+    auto t_sort = now() - t0;
+
+    t0 = now();
+    std::vector<Student> varg; varg.reserve(s.size());
+    std::vector<Student> kiet; kiet.reserve(s.size());
+    for (const auto& st : s) {
+        double v = (m == Mode::Vid ? st.galVid : st.galMed);
+        (v < 5.0 ? varg : kiet).push_back(st);
+    }
+    auto t_split = now() - t0;
+
+    t0 = now();
+    grupesIrasymas("vargsiukai.txt", varg, m);
+    auto t_w1 = now() - t0;
+
+    t0 = now();
+    grupesIrasymas("kietiakiai.txt",  kiet, m);
+    auto t_w2 = now() - t0;
+
+    auto t_all = now() - t_all0;
+
+    std::cout << "Vector\n";
+    std::cout << "Failo nuskaitymo laikas: " << std::fixed << std::setprecision(6) << ms(t_read) << "\n";
+    std::cout << "Rusiavimo laikas: "        << ms(t_sort)  << "\n";
+    std::cout << "Dalinimo laikas: "         << ms(t_split) << "\n";
+    std::cout << "Israsymo (1) laikas: "     << ms(t_w1)    << "\n";
+    std::cout << "Israsymo (2) laikas: "     << ms(t_w2)    << "\n";
+    std::cout << "Viso: "                    << ms(t_all)   << "\n";
+}
+
+static void sarasoSpartosTestas(const std::string& path, Mode m) {
+    using clock = std::chrono::high_resolution_clock;
+    auto now = []{ return clock::now(); };
+    auto ms  = [](auto d){ using namespace std::chrono;
+                           return duration_cast<microseconds>(d).count()/1000.0; };
+
+    auto t_all0 = now();
+
+    auto t0 = now();
+    auto v = studentuSkaitymas(path);
+    auto t_read = now() - t0;
+
+    std::list<Student> s(v.begin(), v.end());
+
+    t0 = now();
+    s.sort([](const Student& a, const Student& b){
+        if (a.pav != b.pav) return a.pav < b.pav;
+        return a.var < b.var;
+    });
+    auto t_sort = now() - t0;
+
+    t0 = now();
+    std::list<Student> varg, kiet;
+    for (const auto& st : s) {
+        double vbal = (m == Mode::Vid ? st.galVid : st.galMed);
+        (vbal < 5.0 ? varg : kiet).push_back(st);
+    }
+    auto t_split = now() - t0;
+
+    t0 = now();
+    grupesIrasymas("vargsiukai.txt", varg, m);
+    auto t_w1 = now() - t0;
+
+    t0 = now();
+    grupesIrasymas("kietiakiai.txt",  kiet, m);
+    auto t_w2 = now() - t0;
+
+    auto t_all = now() - t_all0;
+
+    std::cout << "List\n";
+    std::cout << "Failo nuskaitymo laikas: " << std::fixed << std::setprecision(6) << ms(t_read) << "\n";
+    std::cout << "Rusiavimo laikas: "        << ms(t_sort)  << "\n";
+    std::cout << "Dalinimo laikas: "         << ms(t_split) << "\n";
+    std::cout << "Israsymo (1) laikas: "     << ms(t_w1)    << "\n";
+    std::cout << "Israsymo (2) laikas: "     << ms(t_w2)    << "\n";
+    std::cout << "Viso: "                    << ms(t_all)   << "\n";
+}
