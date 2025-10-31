@@ -29,4 +29,6 @@ List rankiniu ivedimo metu saugojimo atmintyje adresas:
 <img width="952" height="493" alt="image" src="https://github.com/user-attachments/assets/9664169a-c3d0-45cc-8a43-21d75ff30dc6" />
 
 
-
+SSD: Micron 2450 512GB MTFDKCD512TFK
+Procesorius: AMD Ryzen 7 5825U
+RAM: 16gb
