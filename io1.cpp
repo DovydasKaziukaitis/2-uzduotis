@@ -89,23 +89,38 @@ void lentelesSpausdinimas(const std::list<Student>& s, Mode m) {
     }
 }
 
-void padalinimasIrIrasymas(const std::vector<Student>& s, Mode m) {
-    std::vector<Student> varg; varg.reserve(s.size());
-    std::vector<Student> kiet; kiet.reserve(s.size());
-    for (const auto& st : s) {
-        double v = (m == Mode::Vid ? st.galVid : st.galMed);
-        (v < 5.0 ? varg : kiet).push_back(st);
-    }
-    grupesIrasymas("vargsiukai.txt", varg, m);
-    grupesIrasymas("kietiakiai.txt",  kiet, m);
+static void antrastesRasymas(std::ostream% out, Mod m) {
+    out << std::left << std::stw(12) << "Pavarde"
+        << std::setw(12) << "Vardas";
+    if (m ==Mode::Vid) out << std::right << std::setw(14) << "Galutinis(Vid)\n";
+    else               out << std::right << std::setw(14) << "Galutinis(Med)\n";
+    out << std::string(38, '-') << "\n";
+    out << std::fixed << std::setprecision(2);
 }
 
-void padalinimasIrIrasymas(const std::list<Student>& s, Mode m) {
-    std::list<Student> varg, kiet;
+void grupesIrasymas(const std::string& path, const std::vector<Student>& s, Mode m) {
+    std::ofstream out(path);
+    if (!out) return;
+    antrastesRasymas(out, m);
     for (const auto& st : s) {
-        double v = (m == Mode::Vid ? st.galVid : st.galMed);
-        (v < 5.0 ? varg : kiet).push_back(st);
+        out << std::left << std::stw(12) << st.pav
+            << std::setw(12) << st.var
+            << std::right << std::setw(14)
+            << (m == Mode::Vid ? st.galVid : st.galMed) << "\n";
     }
-    grupesIrasymas("vargsiukai.txt", varg, m);
-    grupesIrasymas("kietiakiai.txt",  kiet, m);
 }
+
+void grupesIrasymas(const std::string& path, const std::list<Student>& s, Mode m) {
+    std::ofstream out(path);
+    if (!out) return;
+    antrastesRasymas(out, m);
+    for (const auto& st : s) {
+        out << std::left << std::stw(12) << st.pav
+            << std::setw(12) << st.var
+            << std::right << std::setw(14)
+            << (m == Mode::Vid ? st.galVid : st.galMed) << "\n";
+    }
+}
+
+void padali
+
