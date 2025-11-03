@@ -89,7 +89,7 @@ void lentelesSpausdinimas(const std::list<Student>& s, Mode m) {
     }
 }
 
-static void antrastesRasymas(std::ostream% out, Mod m) {
+static void antrastesRasymas(std::ostream& out, Mod m) {
     out << std::left << std::stw(12) << "Pavarde"
         << std::setw(12) << "Vardas";
     if (m ==Mode::Vid) out << std::right << std::setw(14) << "Galutinis(Vid)\n";
@@ -122,5 +122,83 @@ void grupesIrasymas(const std::string& path, const std::list<Student>& s, Mode m
     }
 }
 
-void padali
+void padalinimasStrategija1(std::vector<Student> const& s, Mode m,
+                            std::vector<Student>& varg, std::vector<Student>& kiet) {
+    varg.clear(); kiet.clear();
+    varg.resserve(s.size());
+    kiet.reserve(s.size());
+    for (const auto& st : s) {
+        double v = (m == Mode::Vid ? st.galVid : st.galMed);
+        (v < 5.0 ? varg : kiet).push_back(st);
+    }
+}
+
+void padalinimasStrategija1(std::list<Student> const& s, Mode m,
+                            std::list<Student>& varg, std::list<Student>& kiet) {
+    varg.clear(); kiet.clear();
+    for (const auto& st : s) {
+        double v = (m == Mode::Vid ? st.galVid : st.galMed);
+        (v < 5.0 ? varg : kiet).push_back(st);
+    }
+}
+
+void padalinimasStrategija2(std::vector<Student> const& s, Mode m,
+                            std::vector<Student>& varg, std::vector<Student>& kiet) {
+    varg.clear(); kiet.clear();
+    varg.resserve(s.size());
+    kiet.reserve(s.size());
+    for (const auto& st : s) {
+        double v = (m == Mode::Vid ? st.galVid : st.galMed);
+        (v < 5.0 ? varg : kiet).push_back(st);
+    }
+}
+
+void padalinimasStrategija2(std::vector<Student>& s, Mode m,
+                            std::vector<Student>& varg, std::vector<Student>& kiet) {
+    varg.clear(); kiet.clear();
+    varg.reserve(s.size());
+    auto it = std::remove_if(s.begin(), s.end(), [&](Student& st){
+        double v = (m == Mode::Vid ? st.galVid : st.galMed);
+        if (v < 5.0) { varg.push_back(std::move(st)); return true; }
+        return false;
+    });
+    s.erase(it, s.end());
+    kiet.swap(s);
+}
+
+void padalinimasStrategija2(std::list<Student>& s, Mode m,
+                            std::list<Student>& varg, std::list<Student>& kiet) {
+    varg.clear(); kiet.clear();
+    for(auto it = s.begin(); it != s.end();){
+        auto nxt = std::next(it);
+        double v = (m == Mode::Vid ? it->galVid : it->galMed);
+        if (v < 5.0) varg.splice(varg.end(), s, it);
+        it = nxt;
+    }
+    kiet.swap(s);
+}
+
+void padalinimasStrategija3(std::vector<Student> const& s, Mode m,
+                            std::vector<Student>& varg, std::vector<Student>& kiet) {
+    std::vector<Student> tmp = s;
+    auto pivot = std::partition(tmp.begin(), tmp.end(), [&](const Student& st){
+        return (m == Mode::Vid ? st.galVid : st.galMed) < 5.0;
+    });
+    varg.assign(tmp.begin(), pivot);
+    kiet.assign(pivot, tmp.end());
+}
+
+void padalinimasStrategija3(std::list<Student> const& s, Mode m,
+                            std::list<Student>& varg, std::list<Student>& kiet) {
+    varg,clear(); kiet.clear();
+    for(auto it = s.begin(), it != s.end(); ) {
+        auto nxt = std::next(it);
+        double v = (m == Mode::Vid ? it->galVid : it->galMed);
+        if (v < 5.0) varg.splice(varg.end(), s , it);
+        it = nxt;
+    }
+    kiet.swap(s);
+}
+
+
 
