@@ -62,6 +62,30 @@ int main(int argc, char** argv) {
     return 0;
 }
 
+static void rankinisIvedimasVector(Mode m) {
+    Student st;
+    std::cout << "Iveskite: Pavarde Vardas Galutinis(Vid) [Galutinis(Med)]: ";
+    if (!(std::cin >> st.pav >> st.var >> st.galVid)) return;
+    if (std::cin.peek() != '\n') { double med; if (std::cin >> med) st.galMed = med; else st.galMed = st.galVid; }
+    else st.galMed = st.galVid;
+
+    std::vector<Student> v; v.push_back(st);
+    std::cout << "Objekto adresas (vector): " << static_cast<const void*>(&v.back()) << "\n";
+    lentelesSpausdinimas(v, m);
+}
+
+static void rankinisIvedimasList(Mode m) {
+    Student st;
+    std::cout << "Iveskite: Pavarde Vardas Galutinis(Vid) [Galutinis(Med)]: ";
+    if (!(std::cin >> st.pav >> st.var >> st.galVid)) return;
+    if (std::cin.peek() != '\n') { double med; if (std::cin >> med) st.galMed = med; else st.galMed = st.galVid; }
+    else st.galMed = st.galVid;
+
+    std::list<Student> s; s.push_back(st);
+    std::cout << "Objekto adresas (list): " << static_cast<const void*>(&s.back()) << "\n";
+    lentelesSpausdinimas(s, m);
+}
+
 static void vektoriausSpartosTestas(const std::string& path, Mode m) {
     using clock = std::chrono::high_resolution_clock;
     auto now = []{ return clock::now(); };
@@ -156,4 +180,5 @@ static void sarasoSpartosTestas(const std::string& path, Mode m) {
     std::cout << "Israsymo (2) laikas: "     << ms(t_w2)    << "\n";
     std::cout << "Viso: "                    << ms(t_all)   << "\n";
 }
+
 
