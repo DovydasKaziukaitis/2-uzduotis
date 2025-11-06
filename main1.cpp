@@ -9,8 +9,12 @@
 #include "utils1.h"
 #include <iomanip>
 
-static void vektoriausSpartosTestas(const std::string& path, Mode m);
-static void sarasoSpartosTestas    (const std::string& path, Mode m);
+using clock_t = std::chrono::high_resulation_clock;
+
+static void testasVector(const std::string& path, Mode m, Strategija s);
+static void testasList(const std::string& path, Mode m, Strategija s);
+static void RankinisIvedimasVector(Mode m);
+static void RankinisIvedimasList(Mode m);
 
 int main(int argc, char** argv) {
     Mode mode = Mode::Vid;
@@ -50,13 +54,8 @@ int main(int argc, char** argv) {
             continue;
         }
 
-        if (mnu == 3) {
-        }
-
-        if (mnu == 4) {
-        }
-
-
+        if (mnu == 3) { rankinisIvedimasVector(mode); continue; }
+        if (mnu == 4) { rankinisIvedimasList(mode); continue; }
         std::cout << "Blogas pasirinkimas\n";
     }
     return 0;
@@ -86,99 +85,92 @@ static void rankinisIvedimasList(Mode m) {
     lentelesSpausdinimas(s, m);
 }
 
-static void vektoriausSpartosTestas(const std::string& path, Mode m) {
-    using clock = std::chrono::high_resolution_clock;
-    auto now = []{ return clock::now(); };
-    auto ms  = [](auto d){ using namespace std::chrono;
-                           return duration_cast<microseconds>(d).count()/1000.0; };
+static double to_ms(clock_t::duration d) {
+    using namespace std::chrono;
+    return duration_cast<microseconds>(d).count()/1000.0;
+}
 
-    auto t_all0 = now();
+static void testasVector(const std::string& path, Mode m, Strategija strat) {
+    auto t_all0 = clock_t::now();
 
-    auto t0 = now();
+    auto t0 = clock_t::now();
     auto s = studentuSkaitymas(path);
-    auto t_read = now() - t0;
+    auto t_read = clock_t::now() - t0;
 
-    t0 = now();
+    t0 = clock_t::now();
     std::sort(s.begin(), s.end(), [](const Student& a, const Student& b){
         if (a.pav != b.pav) return a.pav < b.pav;
         return a.var < b.var;
     });
-    auto t_sort = now() - t0;
+    auto t_sort = clock_t::now() - t0;
 
-    t0 = now();
-    std::vector<Student> varg; varg.reserve(s.size());
-    std::vector<Student> kiet; kiet.reserve(s.size());
-    for (const auto& st : s) {
-        double v = (m == Mode::Vid ? st.galVid : st.galMed);
-        (v < 5.0 ? varg : kiet).push_back(st);
-    }
-    auto t_split = now() - t0;
+    std::vector<Student> varg, kiet;
 
-    t0 = now();
+    t0 = clock_t::now();
+    if (strat == Strategija::S1) padalinimasStrategija1(s, m, varg, kiet);
+    else if (strat == Strategija::S2) padalinimasStrategija2(s, m, varg, kiet);
+    else padalinimasStrategija3(s, m, varg, kiet);
+    auto t_split = clock_t::now() - t0;
+
+    t0 = clock_t::now();
     grupesIrasymas("vargsiukai.txt", varg, m);
-    auto t_w1 = now() - t0;
+    auto t_w1 = clock_t::now() - t0;
 
-    t0 = now();
+    t0 = clock_t::now();
     grupesIrasymas("kietiakiai.txt",  kiet, m);
-    auto t_w2 = now() - t0;
+    auto t_w2 = clock_t::now() - t0;
 
-    auto t_all = now() - t_all0;
+    auto t_all = clock_t::now() - t_all0;
 
-    std::cout << "Vector\n";
-    std::cout << "Failo nuskaitymo laikas: " << std::fixed << std::setprecision(6) << ms(t_read) << "\n";
-    std::cout << "Rusiavimo laikas: "        << ms(t_sort)  << "\n";
-    std::cout << "Dalinimo laikas: "         << ms(t_split) << "\n";
-    std::cout << "Israsymo (1) laikas: "     << ms(t_w1)    << "\n";
-    std::cout << "Israsymo (2) laikas: "     << ms(t_w2)    << "\n";
-    std::cout << "Viso: "                    << ms(t_all)   << "\n";
+    std::cout << "Vector (strategija " << static_cast<int>(strat) << ")\n";
+    std::cout << "Failo nuskaitymo laikas: " << std::fixed << std::setprecision(6) << to_ms(t_read) << "\n";
+    std::cout << "Rusiavimo laikas: "        << to_ms(t_sort)  << "\n";
+    std::cout << "Dalinimo laikas: "         << to_ms(t_split) << "\n";
+    std::cout << "Israsymo (1) laikas: "     << to_ms(t_w1)    << "\n";
+    std::cout << "Israsymo (2) laikas: "     << to_ms(t_w2)    << "\n";
+    std::cout << "Viso: "                    << to_ms(t_all)   << "\n";
 }
 
-static void sarasoSpartosTestas(const std::string& path, Mode m) {
-    using clock = std::chrono::high_resolution_clock;
-    auto now = []{ return clock::now(); };
-    auto ms  = [](auto d){ using namespace std::chrono;
-                           return duration_cast<microseconds>(d).count()/1000.0; };
+static void testasList(const std::string& path, Mode m, Strategija strat) {
+    auto t_all0 = clock_t::now();
 
-    auto t_all0 = now();
-
-    auto t0 = now();
+    auto t0 = clock_t::now();
     auto v = studentuSkaitymas(path);
-    auto t_read = now() - t0;
+    auto t_read = clock_t::now() - t0;
 
-    std::list<Student> s(v.begin(), v.end());
-
-    t0 = now();
+    t0 = clock_t::now();
     s.sort([](const Student& a, const Student& b){
         if (a.pav != b.pav) return a.pav < b.pav;
         return a.var < b.var;
     });
-    auto t_sort = now() - t0;
+    auto t_sort = clock_t::now() - t0;
 
-    t0 = now();
     std::list<Student> varg, kiet;
-    for (const auto& st : s) {
-        double vbal = (m == Mode::Vid ? st.galVid : st.galMed);
-        (vbal < 5.0 ? varg : kiet).push_back(st);
-    }
-    auto t_split = now() - t0;
 
-    t0 = now();
+    t0 = clock_t::now();
+    if (strat == Strategija::S1) padalinimasStrategija1(s, m, varg, kiet);
+    else if (strat == Strategija::S2) padalinimasStrategija2(s, m, varg, kiet);
+    else padalinimasStrategija3(s, m, varg, kiet);
+    auto t_split = clock_t::now() - t0;
+
+    t0 = clock_t::now();
     grupesIrasymas("vargsiukai.txt", varg, m);
-    auto t_w1 = now() - t0;
+    auto t_w1 = clock_t::now() - t0;
 
-    t0 = now();
+    t0 = clock_t::now();
     grupesIrasymas("kietiakiai.txt",  kiet, m);
-    auto t_w2 = now() - t0;
+    auto t_w2 = clock_t::now() - t0;
 
-    auto t_all = now() - t_all0;
+    auto t_all = clock_t::now() - t_all0;
 
-    std::cout << "List\n";
-    std::cout << "Failo nuskaitymo laikas: " << std::fixed << std::setprecision(6) << ms(t_read) << "\n";
-    std::cout << "Rusiavimo laikas: "        << ms(t_sort)  << "\n";
-    std::cout << "Dalinimo laikas: "         << ms(t_split) << "\n";
-    std::cout << "Israsymo (1) laikas: "     << ms(t_w1)    << "\n";
-    std::cout << "Israsymo (2) laikas: "     << ms(t_w2)    << "\n";
-    std::cout << "Viso: "                    << ms(t_all)   << "\n";
+
+    std::cout << "List (strategija " << static_cast<int>(strat) << ")\n";
+    std::cout << "Failo nuskaitymo laikas: " << std::fixed << std::setprecision(6) << to_ms(t_read) << "\n";
+    std::cout << "Rusiavimo laikas: "        << to_ms(t_sort)  << "\n";
+    std::cout << "Dalinimo laikas: "         << to_ms(t_split) << "\n";
+    std::cout << "Israsymo (1) laikas: "     << to_ms(t_w1)    << "\n";
+    std::cout << "Israsymo (2) laikas: "     << to_ms(t_w2)    << "\n";
+    std::cout << "Viso: "                    << to_ms(t_all)   << "\n";
 }
 
 
