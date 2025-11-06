@@ -18,22 +18,20 @@ int main(int argc, char** argv) {
 
     while (true) {
         std::cout << "\n=== MENIU ===\n"
-                  << "1) Skaityti is failo\n"
-                  << "2) Demo: sugeneruoti 5 ir parodyti\n"
-                  << "3) Generuoti N ir padalinti i failus\n"
-                  << "4) Keisti rezima (1-Vid, 2-Med; dabar: " << (mode==Mode::Vid?"Vid":"Med") << ")\n"
-                  << "5) Spartos testas (vector)\n"
-                  << "6) Spartos testas (list)\n"
+                  << "1) Testas: Vector \n"
+                  << "2) Testas List\n"
+                  << "3) Rankinis ivedimas(vector)\n"
+                  << "4) Rankinis ivedimas(list)\n"
+                  << "5) Keisti rezima (1-Vid, 2-Med; dabar: " << (mode==Mode::Vid?"Vid":"Med") << ")\n"
                   << "0) Baigti\n"
                   << "Pasirinkite: ";
 
         int mnu;
         if (!(std::cin >> mnu)) return 0;
         std::getline(std::cin, dump);
-
         if (mnu == 0) break;
 
-        if (mnu == 4) {
+        if (mnu == 5) {
             std::cout << "Naujas rezimas (1-Vid, 2-Med): ";
             int x; if (!(std::cin >> x)) return 0;
             std::getline(std::cin, dump);
@@ -41,46 +39,23 @@ int main(int argc, char** argv) {
             continue;
         }
 
-        if (mnu == 1) {
+        if (mnu == 1 || mnu == 2) {
+            int s; std::cout << "Strategija (1-kopijavimas, 2-perkelimas, 3-partition/splice): ";
+            if (!(std::cin >> s) || s < 1 || s > 3) { std::getline(std::cin, dump); continue; }
+            std::getline(std::cin, dump);
             std::string path = (argc >= 2 ? argv[1] : "");
             if (path.empty()) { std::cout << "Failo kelias: "; std::getline(std::cin, path); }
-
-            auto s = studentuSkaitymas(path);
-            std::cerr << "Uzkrauta irasu: " << s.size() << "\n";
-            lentelesSpausdinimas(s, mode);
-            padalinimasIrIrasymas(s, mode);
-            continue;
-        }
-
-        if (mnu == 2) {
-            auto s = studentuGeneravimas(5);
-            lentelesSpausdinimas(s, mode);
+            if (mnu == 1) testasVector(path, mode, static_cast<Strategija>(s));
+            else          testasList  (path, mode, static_cast<Strategija>(s));
             continue;
         }
 
         if (mnu == 3) {
-            int n; std::cout << "Kiek generuoti?: ";
-            if (!(std::cin >> n) || n <= 0) { std::getline(std::cin, dump); continue; }
-            std::getline(std::cin, dump);
-            auto s = studentuGeneravimas(n);
-            padalinimasIrIrasymas(s, mode);
-            std::cout << "Isvestis: vargsiukai.txt, kietiakiai.txt\n";
-            continue;
         }
 
-        if (mnu == 5) {
-            std::string path = (argc >= 2 ? argv[1] : "");
-            if (path.empty()) { std::cout << "Failo kelias: "; std::getline(std::cin, path); }
-            vektoriausSpartosTestas(path, mode);
-            continue;
+        if (mnu == 4) {
         }
 
-        if (mnu == 6) {
-            std::string path = (argc >= 2 ? argv[1] : "");
-            if (path.empty()) { std::cout << "Failo kelias: "; std::getline(std::cin, path); }
-            sarasoSpartosTestas(path, mode);
-            continue;
-        }
 
         std::cout << "Blogas pasirinkimas\n";
     }
@@ -181,3 +156,4 @@ static void sarasoSpartosTestas(const std::string& path, Mode m) {
     std::cout << "Israsymo (2) laikas: "     << ms(t_w2)    << "\n";
     std::cout << "Viso: "                    << ms(t_all)   << "\n";
 }
+
