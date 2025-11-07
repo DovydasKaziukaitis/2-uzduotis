@@ -9,7 +9,7 @@
 #include "utils1.h"
 #include <iomanip>
 
-using clock_t = std::chrono::high_resulation_clock;
+using laikr_t = std::chrono::high_resolution_clock;
 
 static void testasVector(const std::string& path, Mode m, Strategija s);
 static void testasList(const std::string& path, Mode m, Strategija s);
@@ -54,14 +54,14 @@ int main(int argc, char** argv) {
             continue;
         }
 
-        if (mnu == 3) { rankinisIvedimasVector(mode); continue; }
-        if (mnu == 4) { rankinisIvedimasList(mode); continue; }
+        if (mnu == 3) { RankinisIvedimasVector(mode); continue; }
+        if (mnu == 4) { RankinisIvedimasList(mode); continue; }
         std::cout << "Blogas pasirinkimas\n";
     }
     return 0;
 }
 
-static void rankinisIvedimasVector(Mode m) {
+static void RankinisIvedimasVector(Mode m) {
     Student st;
     std::cout << "Iveskite: Pavarde Vardas Galutinis(Vid) [Galutinis(Med)]: ";
     if (!(std::cin >> st.pav >> st.var >> st.galVid)) return;
@@ -73,7 +73,7 @@ static void rankinisIvedimasVector(Mode m) {
     lentelesSpausdinimas(v, m);
 }
 
-static void rankinisIvedimasList(Mode m) {
+static void RankinisIvedimasList(Mode m) {
     Student st;
     std::cout << "Iveskite: Pavarde Vardas Galutinis(Vid) [Galutinis(Med)]: ";
     if (!(std::cin >> st.pav >> st.var >> st.galVid)) return;
@@ -85,42 +85,42 @@ static void rankinisIvedimasList(Mode m) {
     lentelesSpausdinimas(s, m);
 }
 
-static double to_ms(clock_t::duration d) {
+static double to_ms(laikr_t::duration d) {
     using namespace std::chrono;
     return duration_cast<microseconds>(d).count()/1000.0;
 }
 
 static void testasVector(const std::string& path, Mode m, Strategija strat) {
-    auto t_all0 = clock_t::now();
+    auto t_all0 = laikr_t::now();
 
-    auto t0 = clock_t::now();
+    auto t0 = laikr_t::now();
     auto s = studentuSkaitymas(path);
-    auto t_read = clock_t::now() - t0;
+    auto t_read = laikr_t::now() - t0;
 
-    t0 = clock_t::now();
+    t0 = laikr_t::now();
     std::sort(s.begin(), s.end(), [](const Student& a, const Student& b){
         if (a.pav != b.pav) return a.pav < b.pav;
         return a.var < b.var;
     });
-    auto t_sort = clock_t::now() - t0;
+    auto t_sort = laikr_t::now() - t0;
 
     std::vector<Student> varg, kiet;
 
-    t0 = clock_t::now();
+    t0 = laikr_t::now();
     if (strat == Strategija::S1) padalinimasStrategija1(s, m, varg, kiet);
     else if (strat == Strategija::S2) padalinimasStrategija2(s, m, varg, kiet);
     else padalinimasStrategija3(s, m, varg, kiet);
-    auto t_split = clock_t::now() - t0;
+    auto t_split = laikr_t::now() - t0;
 
-    t0 = clock_t::now();
+    t0 = laikr_t::now();
     grupesIrasymas("vargsiukai.txt", varg, m);
-    auto t_w1 = clock_t::now() - t0;
+    auto t_w1 = laikr_t::now() - t0;
 
-    t0 = clock_t::now();
+    t0 = laikr_t::now();
     grupesIrasymas("kietiakiai.txt",  kiet, m);
-    auto t_w2 = clock_t::now() - t0;
+    auto t_w2 = laikr_t::now() - t0;
 
-    auto t_all = clock_t::now() - t_all0;
+    auto t_all = laikr_t::now() - t_all0;
 
     std::cout << "Vector (strategija " << static_cast<int>(strat) << ")\n";
     std::cout << "Failo nuskaitymo laikas: " << std::fixed << std::setprecision(6) << to_ms(t_read) << "\n";
@@ -132,36 +132,37 @@ static void testasVector(const std::string& path, Mode m, Strategija strat) {
 }
 
 static void testasList(const std::string& path, Mode m, Strategija strat) {
-    auto t_all0 = clock_t::now();
+    auto t_all0 = laikr_t::now();
 
-    auto t0 = clock_t::now();
+    auto t0 = laikr_t::now();
     auto v = studentuSkaitymas(path);
-    auto t_read = clock_t::now() - t0;
+    auto t_read = laikr_t::now() - t0;
+    std::list<Student> s(v.begin(), v.end());
 
-    t0 = clock_t::now();
+    t0 = laikr_t::now();
     s.sort([](const Student& a, const Student& b){
         if (a.pav != b.pav) return a.pav < b.pav;
         return a.var < b.var;
     });
-    auto t_sort = clock_t::now() - t0;
+    auto t_sort = laikr_t::now() - t0;
 
     std::list<Student> varg, kiet;
 
-    t0 = clock_t::now();
+    t0 = laikr_t::now();
     if (strat == Strategija::S1) padalinimasStrategija1(s, m, varg, kiet);
     else if (strat == Strategija::S2) padalinimasStrategija2(s, m, varg, kiet);
     else padalinimasStrategija3(s, m, varg, kiet);
-    auto t_split = clock_t::now() - t0;
+    auto t_split = laikr_t::now() - t0;
 
-    t0 = clock_t::now();
+    t0 = laikr_t::now();
     grupesIrasymas("vargsiukai.txt", varg, m);
-    auto t_w1 = clock_t::now() - t0;
+    auto t_w1 = laikr_t::now() - t0;
 
-    t0 = clock_t::now();
+    t0 = laikr_t::now();
     grupesIrasymas("kietiakiai.txt",  kiet, m);
-    auto t_w2 = clock_t::now() - t0;
+    auto t_w2 = laikr_t::now() - t0;
 
-    auto t_all = clock_t::now() - t_all0;
+    auto t_all = laikr_t::now() - t_all0;
 
 
     std::cout << "List (strategija " << static_cast<int>(strat) << ")\n";
@@ -172,5 +173,3 @@ static void testasList(const std::string& path, Mode m, Strategija strat) {
     std::cout << "Israsymo (2) laikas: "     << to_ms(t_w2)    << "\n";
     std::cout << "Viso: "                    << to_ms(t_all)   << "\n";
 }
-
-
