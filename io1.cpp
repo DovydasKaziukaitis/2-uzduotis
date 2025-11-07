@@ -89,8 +89,8 @@ void lentelesSpausdinimas(const std::list<Student>& s, Mode m) {
     }
 }
 
-static void antrastesRasymas(std::ostream& out, Mod m) {
-    out << std::left << std::stw(12) << "Pavarde"
+static void antrastesRasymas(std::ostream& out, Mode m) {
+    out << std::left << std::setw(12) << "Pavarde"
         << std::setw(12) << "Vardas";
     if (m ==Mode::Vid) out << std::right << std::setw(14) << "Galutinis(Vid)\n";
     else               out << std::right << std::setw(14) << "Galutinis(Med)\n";
@@ -103,7 +103,7 @@ void grupesIrasymas(const std::string& path, const std::vector<Student>& s, Mode
     if (!out) return;
     antrastesRasymas(out, m);
     for (const auto& st : s) {
-        out << std::left << std::stw(12) << st.pav
+        out << std::left << std::setw(12) << st.pav
             << std::setw(12) << st.var
             << std::right << std::setw(14)
             << (m == Mode::Vid ? st.galVid : st.galMed) << "\n";
@@ -115,7 +115,7 @@ void grupesIrasymas(const std::string& path, const std::list<Student>& s, Mode m
     if (!out) return;
     antrastesRasymas(out, m);
     for (const auto& st : s) {
-        out << std::left << std::stw(12) << st.pav
+        out << std::left << std::setw(12) << st.pav
             << std::setw(12) << st.var
             << std::right << std::setw(14)
             << (m == Mode::Vid ? st.galVid : st.galMed) << "\n";
@@ -125,7 +125,7 @@ void grupesIrasymas(const std::string& path, const std::list<Student>& s, Mode m
 void padalinimasStrategija1(std::vector<Student> const& s, Mode m,
                             std::vector<Student>& varg, std::vector<Student>& kiet) {
     varg.clear(); kiet.clear();
-    varg.resserve(s.size());
+    varg.reserve(s.size());
     kiet.reserve(s.size());
     for (const auto& st : s) {
         double v = (m == Mode::Vid ? st.galVid : st.galMed);
@@ -145,7 +145,7 @@ void padalinimasStrategija1(std::list<Student> const& s, Mode m,
 void padalinimasStrategija2(std::vector<Student> const& s, Mode m,
                             std::vector<Student>& varg, std::vector<Student>& kiet) {
     varg.clear(); kiet.clear();
-    varg.resserve(s.size());
+    varg.reserve(s.size());
     kiet.reserve(s.size());
     for (const auto& st : s) {
         double v = (m == Mode::Vid ? st.galVid : st.galMed);
@@ -188,10 +188,10 @@ void padalinimasStrategija3(std::vector<Student> const& s, Mode m,
     kiet.assign(pivot, tmp.end());
 }
 
-void padalinimasStrategija3(std::list<Student> const& s, Mode m,
+void padalinimasStrategija3(std::list<Student>& s, Mode m,
                             std::list<Student>& varg, std::list<Student>& kiet) {
-    varg,clear(); kiet.clear();
-    for(auto it = s.begin(), it != s.end(); ) {
+    varg.clear(); kiet.clear();
+    for(auto it = s.begin(); it != s.end(); ) {
         auto nxt = std::next(it);
         double v = (m == Mode::Vid ? it->galVid : it->galMed);
         if (v < 5.0) varg.splice(varg.end(), s , it);
