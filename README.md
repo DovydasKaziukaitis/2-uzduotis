@@ -58,3 +58,64 @@ Procesorius: AMD Ryzen 7 5825U
 RAM: 16gb
 
 V1.0 versija:
+paleidimas terminale: g++ -O2 -std=c++17 io1.cpp utils1.cpp main1.cpp -0
+
+1 milijonu irasu studentu sparta vektoriaus su 1 strategija(kopijavimas):
+Vector (strategija 1)
+Failo nuskaitymo laikas: 2478.828000
+Rusiavimo laikas: 977.236000
+Dalinimo laikas: 50.120000
+Israsymo (1) laikas: 698.513000
+Israsymo (2) laikas: 1013.912000
+Viso: 5218.612000
+<img width="520" height="191" alt="image" src="https://github.com/user-attachments/assets/43a9dcb6-8895-4085-9e91-4346b9984f13" />
+
+1 milijonu irasu studentu sparta vektoriaus su 2 strategija(perkelimas):
+Vector (strategija 2)
+Failo nuskaitymo laikas: 2374.075000
+Rusiavimo laikas: 942.553000
+Dalinimo laikas: 33.135000
+Israsymo (1) laikas: 705.938000
+Israsymo (2) laikas: 982.728000
+Viso: 5038.431000
+<img width="508" height="191" alt="image" src="https://github.com/user-attachments/assets/f73680cd-cf27-4316-b8fe-de94a27d33c3" />
+
+1 milijonu irasu studentu sparta vektoriaus su 3 strategija(partition/splice):
+Vector (strategija 3)
+Failo nuskaitymo laikas: 2465.061000
+Rusiavimo laikas: 1042.841000
+Dalinimo laikas: 121.406000
+Israsymo (1) laikas: 654.572000
+Israsymo (2) laikas: 997.583000
+Viso: 5281.465000
+<img width="511" height="192" alt="image" src="https://github.com/user-attachments/assets/22664914-0840-4225-afc2-bc81cc161436" />
+
+1 milijonu irasu studentu sparta list su 1 strategija(kopijavimas):
+List (strategija 1)
+Failo nuskaitymo laikas: 2363.711000
+Rusiavimo laikas: 353.242000
+Dalinimo laikas: 228.605000
+Israsymo (1) laikas: 689.560000
+Israsymo (2) laikas: 1076.237000
+Viso: 4849.535000
+<img width="515" height="184" alt="image" src="https://github.com/user-attachments/assets/73b86309-4a02-4e28-accf-b9e7b6fd2a43" />
+
+1 milijonu irasu studentu sparta list su 2 strategija(perkelimas):
+List (strategija 2)
+Failo nuskaitymo laikas: 2350.520000
+Rusiavimo laikas: 377.641000
+Dalinimo laikas: 44.273000
+Israsymo (1) laikas: 746.767000
+Israsymo (2) laikas: 1084.279000
+Viso: 4740.216000
+<img width="497" height="183" alt="image" src="https://github.com/user-attachments/assets/8b3e4deb-83f8-4624-8fde-728f5d4c7927" />
+
+1 milijonu irasu studentu sparta list su 3 strategija(partition/splice):
+List (strategija 3)
+Failo nuskaitymo laikas: 2351.103000
+Rusiavimo laikas: 359.358000
+Dalinimo laikas: 44.490000
+Israsymo (1) laikas: 642.197000
+Israsymo (2) laikas: 1135.604000
+Viso: 4671.585000
+<img width="481" height="189" alt="image" src="https://github.com/user-attachments/assets/57fc8412-bb50-4c1a-a779-0a615daa83ee" />
