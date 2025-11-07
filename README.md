@@ -119,3 +119,24 @@ Israsymo (1) laikas: 642.197000
 Israsymo (2) laikas: 1135.604000
 Viso: 4671.585000
 <img width="481" height="189" alt="image" src="https://github.com/user-attachments/assets/57fc8412-bb50-4c1a-a779-0a615daa83ee" />
+
+rezultatu tendencija:
+List konteineris visais atvejais veikia greičiau nei vector (apie 4700 ms pries 5200 ms).
+Failo nuskaitymas yra panašus tarp visu bandymu (~2350–2470 ms), nes tai nepriklauso nuo konteinerio tipo.
+Išrašymas (700–1100 ms) taip pat labai panašus tarp visų testų, ši dalyka riboja disko greitis (SSD).
+
+Strategija 1(kopijavimas): Vector S1: 50 ms (dalinimas) List S1: 228 ms (dalinimas)
+
+Strategija 2(Perkelimas, splice): 
+Vector S2: greičiausias vektoriaus rezultatas (5038 ms)
+List S2: dar greitesnis (4740 ms)
+splice leidžia perkelti mazgus be kopijavimo, todėl dalinimas vos 44 ms.
+
+Strategija 3(partition/splice):
+Vector S3: netikėtai lėtesnė (121 ms dalinimas, viso 5281 ms)
+List S3: beveik identiška S2 (44 ms dalinimas, 4671 ms viso)
+čia splice išlieka greitas, o nedidelis skirtumas atsiranda dėl kitokio įrašymo tvarkos.
+atveju S3 praktiškai tokia pati kaip S2, tačiau vector šiek tiek lėtesnė dėl atminties pertvarkymo.
+
+Išvada: Geriausia strategija: S2 perkėlimas (move/splice).
+Ji duoda mažiausią bendrą laiką abiem konteineriams.
