@@ -10,12 +10,16 @@ std::vector<Student> studentuGeneravimas(int m) {
     std::vector<Student> v;
     v.reserve(m);
     for (int i = 0; i < m; ++i) {
-        Student st;
-        st.pav = "Pavarde" + std::to_string(i+1);
-        st.var = "Vardas"  + std::to_string(i+1);
-        st.galVid = d(rng);
-        st.galMed = d(rng);
-        v.push_back(st);
+        std::string pav = "Pavarde" + std::to_string(i+1);
+        std::string var = "Vardas"  + std::to_string(i+1);
+
+        std::vector<double> nd;
+        nd.reserve(5)
+        for (int j = 0; j < 5; ++j)
+            nd.push_back(d(rng));
+        double egz = d(rng);
+        v.emplace_back(pav, var, nd, egz);
     }
     return v;
 }
+
