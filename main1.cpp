@@ -4,9 +4,9 @@
 #include <list>
 #include <algorithm>
 #include <chrono>
-#include "student1.h"
-#include "io1.h"
-#include "utils1.h"
+#include "student2.h"
+#include "io2.h"
+#include "utils2.h"
 #include <iomanip>
 
 using laikr_t = std::chrono::high_resolution_clock;
@@ -80,7 +80,7 @@ static void RankinisIvedimasList(Mode m) {
     double vid, med;
     std::cout << "Iveskite: Pavarde Vardas Galutinis(Vid) [Galutinis(Med)]: ";
     if (!(std::cin >> pav >> var >> vid)) return;
-    if (std::cin.peek() != '\n') {if(!((std::cin >> med)) med = vid; }
+    if (std::cin.peek() != '\n') {if (!(std::cin >> med)) med = vid; }
     else med = vid;
     Student st(pav, var, vid, med);
     std::list<Student> s; s.push_back(st);
@@ -176,4 +176,5 @@ static void testasList(const std::string& path, Mode m, Strategija strat) {
     std::cout << "Israsymo (2) laikas: "     << to_ms(t_w2)    << "\n";
     std::cout << "Viso: "                    << to_ms(t_all)   << "\n";
 }
+
 
