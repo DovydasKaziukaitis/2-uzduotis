@@ -45,10 +45,33 @@ public:
           nd_(nd), egz aminas_(egz) {
           perskaiciuotiIsPirminiu();
     }
-    
+
+    inline const std::string& getPavarde()  const { return pavarde_; }
+    inline const std::string& getVardas()   const { return vardas_;  }
+    inline double getGalVid()   const { return galVid_;  }
+    inline double getGalMed()   const { return galMed_;  }
+
+    inline const std::vector<double>& getNd() const {return nd_; }
+    inline double getEgz() const { return egzaminas_; }
+
+    inline void setPavarde(const std::string& pav) { pavarde_ = pav; }
+    inline void setVardas(const std::string& var) { vardas_ = var; }
+
+    inline void setGalVid(double v) { galVid = v; }
+    inline void setGalMed(double m) { galMed = m; }
+
+    inline void setNd(const std::vector<double>& nd) {
+        nd_ = nd;
+        perskaiciuotiIsPirminiu();
+    }
+    inline void setEgz(double egz) {
+        egzaminas_ = egz;
+        perskaiciuotiIsPirminiu();
+    }
 
 
 };
+
 
 
 
