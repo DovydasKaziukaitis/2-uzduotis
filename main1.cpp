@@ -62,24 +62,27 @@ int main(int argc, char** argv) {
 }
 
 static void RankinisIvedimasVector(Mode m) {
-    Student st;
+    std::string pav, var;
+    double vid, med;
     std::cout << "Iveskite: Pavarde Vardas Galutinis(Vid) [Galutinis(Med)]: ";
-    if (!(std::cin >> st.pav >> st.var >> st.galVid)) return;
-    if (std::cin.peek() != '\n') { double med; if (std::cin >> med) st.galMed = med; else st.galMed = st.galVid; }
-    else st.galMed = st.galVid;
-
+    if (!(std::cin >> pav >> var >> vid)) return;
+    if (std::cin.peek() != '\n') {if(!(std::cin >> med)) med = vid; }
+    else med = vid;
+    
+    Student st(pav, var, vid, med);
     std::vector<Student> v; v.push_back(st);
     std::cout << "Objekto adresas (vector): " << static_cast<const void*>(&v.back()) << "\n";
     lentelesSpausdinimas(v, m);
 }
 
 static void RankinisIvedimasList(Mode m) {
-    Student st;
+    std::string pav, var;
+    double vid, med;
     std::cout << "Iveskite: Pavarde Vardas Galutinis(Vid) [Galutinis(Med)]: ";
-    if (!(std::cin >> st.pav >> st.var >> st.galVid)) return;
-    if (std::cin.peek() != '\n') { double med; if (std::cin >> med) st.galMed = med; else st.galMed = st.galVid; }
-    else st.galMed = st.galVid;
-
+    if (!(std::cin >> pav >> var >> vid)) return;
+    if (std::cin.peek() != '\n') {if(!((std::cin >> med)) med = vid; }
+    else med = vid;
+    Student st(pav, var, vid, med);
     std::list<Student> s; s.push_back(st);
     std::cout << "Objekto adresas (list): " << static_cast<const void*>(&s.back()) << "\n";
     lentelesSpausdinimas(s, m);
@@ -99,8 +102,8 @@ static void testasVector(const std::string& path, Mode m, Strategija strat) {
 
     t0 = laikr_t::now();
     std::sort(s.begin(), s.end(), [](const Student& a, const Student& b){
-        if (a.pav != b.pav) return a.pav < b.pav;
-        return a.var < b.var;
+        if (a.getPavarde() != b.getPavarde()) return a.getPavarde() < b.getPavarde();
+        return a.getVardas() < b.getVardas();
     });
     auto t_sort = laikr_t::now() - t0;
 
@@ -141,8 +144,8 @@ static void testasList(const std::string& path, Mode m, Strategija strat) {
 
     t0 = laikr_t::now();
     s.sort([](const Student& a, const Student& b){
-        if (a.pav != b.pav) return a.pav < b.pav;
-        return a.var < b.var;
+        if (a.getPavarde() != b.getPavarde()) return a.getPavarde() < b.getPavarde();
+        return a.getVardas() < b.getVardas();
     });
     auto t_sort = laikr_t::now() - t0;
 
@@ -173,3 +176,4 @@ static void testasList(const std::string& path, Mode m, Strategija strat) {
     std::cout << "Israsymo (2) laikas: "     << to_ms(t_w2)    << "\n";
     std::cout << "Viso: "                    << to_ms(t_all)   << "\n";
 }
+
