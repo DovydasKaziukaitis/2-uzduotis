@@ -1,5 +1,8 @@
 #pragma once
 #include <string>
+#include<vector>
+#include<numeric>
+#include<algorithm<
 
 enum class Mode { Vid = 1, Med = 2 };
 enum class Strategija {S1 = 1, S2 = 2, S3 = 3};
@@ -10,14 +13,14 @@ private:
     std::string vardas_;
 
     std::vector<double> nd_;
-    double egzaminas_ = 0.0;
+    double egzaminas_;
     double galVid_;
     double galMed_;
 
     static double vidurkis(const std::vector<double>& v) {
         if (v.empty()) return 0.0;
         double sum = std::accumulate(v.begin(), v.end(), 0.0);
-        return sum / v.size():
+        return sum / static_cast<double>(v.size()):
     }
 
     static double mediana(std::vector<double> v) {
@@ -39,10 +42,10 @@ public:
         : pavarde_(), vardas_(), galVid_(0.0), nd_(), egzaminas_(0.0), galMed(0.0) {}
 
     Student(const std::string& pav, const std::string& var, double vid, double med)
-        : pavarde_(pav), vardas_(var), nd_(), egzaminas(0.0), galVid_(vid), galMed(med) {}
+        : pavarde_(pav), vardas_(var), nd_(), egzaminas_(0.0), galVid_(vid), galMed(med) {}
     Student(const std::string& pav, const std::string& var, const std::vector<double>& nd, double egz)
         : pavarde_(pav), vardas_(var),
-          nd_(nd), egz aminas_(egz) {
+          nd_(nd), egzaminas_(egz) {
           perskaiciuotiIsPirminiu();
     }
 
@@ -71,6 +74,7 @@ public:
 
 
 };
+
 
 
 
