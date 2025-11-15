@@ -14,7 +14,7 @@ std::vector<Student> studentuGeneravimas(int m) {
         std::string var = "Vardas"  + std::to_string(i+1);
 
         std::vector<double> nd;
-        nd.reserve(5)
+        nd.reserve(5);
         for (int j = 0; j < 5; ++j)
             nd.push_back(d(rng));
         double egz = d(rng);
@@ -22,4 +22,5 @@ std::vector<Student> studentuGeneravimas(int m) {
     }
     return v;
 }
+
 
