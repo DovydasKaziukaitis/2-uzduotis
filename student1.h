@@ -39,8 +39,17 @@ public:
         : pavarde_(), vardas_(), galVid_(0.0), nd_(), egzaminas_(0.0), galMed(0.0) {}
 
     Student(const std::string& pav, const std::string& var, double vid, double med)
-        : pavarde_(pav), vardas_(var), galVid_(vid), galMed(med) {}
+        : pavarde_(pav), vardas_(var), nd_(), egzaminas(0.0), galVid_(vid), galMed(med) {}
+    Student(const std::string& pav, const std::string& var, const std::vector<double>& nd, double egz)
+        : pavarde_(pav), vardas_(var),
+          nd_(nd), egz aminas_(egz) {
+          perskaiciuotiIsPirminiu();
+    }
+    
+
+
 };
+
 
 
 
