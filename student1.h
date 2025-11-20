@@ -3,6 +3,7 @@
 #include<vector>
 #include<numeric>
 #include<algorithm>
+#include<iostream>
 
 enum class Mode { Vid = 1, Med = 2 };
 enum class Strategija {S1 = 1, S2 = 2, S3 = 3};
@@ -95,20 +96,39 @@ public:
         perskaiciuotiIsPirminiu();
     }
     friend std::istream& operator>>(std::istream& is, Student& st);
-    friend std::ostream& operator<<(std::ostream& os, const Student% st);
+    friend std::ostream& operator<<(std::ostream& os, const Student& st);
 };
 
-inline std::istream& operator>>(std::istream% is, Student& st) {
+inline std::istream& operator>>(std::istream& is, Student& st) {
     std::string pav, var;
     double vid, med;
-    
 
+    if (!(is >> pav >> var >> vid))
+        return is;
+    if (is.peek() != '\n' && is.peek() != EOF) {
+        if (!(is >> med)) med = vid;
+    } else {
+        med = vid;
+    }
+    st.pavarde_   = pav;
+    st.vardas_    = var;
+    st.nd_.clear();
+    st.egzaminas_ = 0.0;
+    st.galVid_    = vid;
+    st.galMed_    = med;
 
+    return is;
+}
 
 
 inline std::ostream& operator<<(std::ostream& os, const Student& st) {
-    os << 
-};
+    os << st.pavarde_
+       << st.vardas_
+       << st.galVid_
+       << st.galMed_;
+    return os;
+}
+
 
 
 
