@@ -49,6 +49,14 @@ public:
           perskaiciuotiIsPirminiu();
     }
 
+    Student(const Student& kiti)
+        : pavarde_(kiti.pavarde_),
+          vardas_(kiti.vardas_),
+          nd_(kiti.nd_),
+          egzaminas_(kiti.egzaminas_),
+          galVid_(kiti.galVid_),
+          galMed_(kiti.galMed_) {}
+
     ~Student() = default;
 
     inline const std::string& getPavarde()  const { return pavarde_; }
@@ -82,6 +90,7 @@ public:
 
 
 };
+
 
 
 
