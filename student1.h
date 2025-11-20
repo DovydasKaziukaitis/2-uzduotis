@@ -94,15 +94,22 @@ public:
         egzaminas_ = egz;
         perskaiciuotiIsPirminiu();
     }
+    friend std::istream& operator>>(std::istream& is, Student& st);
+    friend std::ostream& operator<<(std::ostream& os, const Student% st);
 };
 
+inline std::istream& operator>>(std::istream% is, Student& st) {
+    std::string pav, var;
+    double vid, med;
+    
 
 
 
 
-
-
+inline std::ostream& operator<<(std::ostream& os, const Student& st) {
+    os << 
 };
+
 
 
 
