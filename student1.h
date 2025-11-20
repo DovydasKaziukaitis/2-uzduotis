@@ -49,15 +49,28 @@ public:
           perskaiciuotiIsPirminiu();
     }
 
-    Student(const Student& kiti)
-        : pavarde_(kiti.pavarde_),
-          vardas_(kiti.vardas_),
-          nd_(kiti.nd_),
-          egzaminas_(kiti.egzaminas_),
-          galVid_(kiti.galVid_),
-          galMed_(kiti.galMed_) {}
+    Student(const Student& kitas)
+        : pavarde_(kitas.pavarde_),
+          vardas_(kitas.vardas_),
+          nd_(kitas.nd_),
+          egzaminas_(kitas.egzaminas_),
+          galVid_(kitas.galVid_),
+          galMed_(kitas.galMed_) {}
 
-    ~Student() = default;
+    
+    Student& operator=(const Student& kitas) {
+        if(this != &kitas) {
+            pavarde_ = kitas.pavarde_;
+            vardas_ = kitas.vardas_;
+            nd_ = kitas.nd_;
+            egzaminas_ = kitas.egzaminas_;
+            galVid_ = kitas.galVid_;
+            galMed_ = kitas.galMed_;
+        }
+        return *this;
+    }
+        
+    ~Student() {}
 
     inline const std::string& getPavarde()  const { return pavarde_; }
     inline const std::string& getVardas()   const { return vardas_;  }
@@ -90,6 +103,7 @@ public:
 
 
 };
+
 
 
 
