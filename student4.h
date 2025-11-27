@@ -8,6 +8,29 @@
 enum class Mode { Vid = 1, Med = 2 };
 enum class Strategija { S1 = 1, S2 = 2, S3 = 3 };
 
+class Zmogus {
+protected:
+    std::string pavarde_;
+    std::string vardas_;
+
+public:
+    Zmogus() : pavarde_(), vardas_() {}
+    Zmogus(const std::string& pav, const std::string& var)
+        : pavarde_(pav), vardas_(var) {}
+
+    Zmogus(const Zmogus&)            = default;
+    Zmogus& operator=(const Zmogus&) = default;
+    virtual ~Zmogus() = 0;
+    
+    inline const std::string& getPavarde() const { return pavarde_; }
+    inline const std::string& getVardas()  const { return vardas_;  }
+
+    inline void setPavarde(const std::string& pav) { pavarde_ = pav; }
+    inline void setVardas(const std::string& var)  { vardas_  = var; }
+};
+
+virtual Zmogus::~Zmogus() {} 
+
 class Student {
 private:
     std::string pavarde_;
@@ -129,4 +152,5 @@ inline std::ostream& operator<<(std::ostream& os, const Student& st) {
        << st.galMed_;
     return os;
 }
+
 
