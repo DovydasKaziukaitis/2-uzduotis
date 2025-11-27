@@ -130,8 +130,6 @@ inline std::istream& operator>>(std::istream& is, Student& st) {
     } else {
         med = vid;
     }
-    st.pavarde_   = pav;
-    st.vardas_    = var;
     st.nd_.clear();
     st.egzaminas_ = 0.0;
     st.galVid_    = vid;
@@ -146,5 +144,5 @@ inline std::ostream& operator<<(std::ostream& os, const Student& st) {
     return os;
 }
 
-
+using Student = Studentas;
 
