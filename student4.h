@@ -31,11 +31,8 @@ public:
 
 virtual Zmogus::~Zmogus() {} 
 
-class Student {
+class Studentas : public Zmogus {
 private:
-    std::string pavarde_;
-    std::string vardas_;
-
     std::vector<double> nd_;
     double egzaminas_;
     double galVid_;
@@ -63,15 +60,15 @@ private:
     }
 
 public:
-    Student()
-        : pavarde_(), vardas_(), nd_(), egzaminas_(0.0), galVid_(0.0), galMed_(0.0) {}
+    Studentas()
+        : Zmogus(), nd_(), egzaminas_(0.0), galVid_(0.0), galMed_(0.0) {}
 
     Student(const std::string& pav, const std::string& var, double vid, double med)
-        : pavarde_(pav), vardas_(var), nd_(), egzaminas_(0.0), galVid_(vid), galMed_(med) {}
+        : Zmogus(var, pav), nd_(), egzaminas_(0.0), galVid_(vid), galMed_(med) {}
 
     Student(const std::string& pav, const std::string& var,
             const std::vector<double>& nd, double egz)
-        : pavarde_(pav), vardas_(var),
+        : Zmogus(pav, var),
           nd_(nd), egzaminas_(egz) {
         perskaiciuotiIsPirminiu();
     }
@@ -84,10 +81,9 @@ public:
           galVid_(kitas.galVid_),
           galMed_(kitas.galMed_) {}
 
-    Student& operator=(const Student& kitas) {
+    Studentas& operator=(const Studentas& kitas) {
         if (this != &kitas) {
-            pavarde_   = kitas.pavarde_;
-            vardas_    = kitas.vardas_;
+            Zmogus::operator=(kitas);
             nd_        = kitas.nd_;
             egzaminas_ = kitas.egzaminas_;
             galVid_    = kitas.galVid_;
@@ -95,18 +91,15 @@ public:
         }
         return *this;
     }
-    ~Student() {}
+    
+    ~Studentas() override = default;
 
-    inline const std::string& getPavarde()  const { return pavarde_; }
-    inline const std::string& getVardas()   const { return vardas_;  }
-    inline double getGalVid()               const { return galVid_;  }
-    inline double getGalMed()               const { return galMed_;  }
+    inline double getGalVid()             const { return galVid_;  }
+    inline double getGalMed()             const { return galMed_;  }
 
     inline const std::vector<double>& getNd() const { return nd_; }
     inline double getEgz() const { return egzaminas_; }
 
-    inline void setPavarde(const std::string& pav) { pavarde_ = pav; }
-    inline void setVardas(const std::string& var)  { vardas_ = var; }
 
     inline void setGalVid(double v) { galVid_ = v; }
     inline void setGalMed(double m) { galMed_ = m; }
@@ -152,5 +145,6 @@ inline std::ostream& operator<<(std::ostream& os, const Student& st) {
        << st.galMed_;
     return os;
 }
+
 
 
