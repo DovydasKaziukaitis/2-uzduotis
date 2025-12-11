@@ -249,6 +249,7 @@ int main(int argc, char** argv) {
             << "3) Sugeneruoti studentu pazymiu faila\n"
             << "4) Padalinti i vargsiukus/kietiakius (galutinis <= 5)\n"
             << "5) Spartos testas(vector/list)\n"
+            << "6) Nuskaityti pazymiu faila ir iskart padalinti\n"
             << "0) Baigti\n"
             << "Pasirinkite: ";
 
@@ -348,7 +349,7 @@ int main(int argc, char** argv) {
                     << (mode == Mode::Vid ? "Galutinis(Vid)" : "Galutinis(Med)")
                     << ")\n";
             continue;
-    }
+        }
         if (mnu == 5) {
             std::string path;
             if (argc >= 2) path = argv[1];
@@ -377,6 +378,57 @@ int main(int argc, char** argv) {
             if (c == 2) spartos_testas_list(path, mode);
             else        spartos_testas(path, mode);
 
+            continue;
+        }
+
+        if (mnu == 6) {
+            std::string path;
+            if (argc >= 2) path = argv[1];
+            else {
+                std::cout << "Failo kelias: ";
+                std::getline(std::cin, path);
+            }
+
+            std::cout << "Pagal ka skaiciuoti galutini?\n"
+                      << "1) Galutinis(Vid)\n"
+                      << "2) Galutinis(Med)\n"
+                      << "Pasirinkite: ";
+            int x;
+            if (!(std::cin >> x)) x = 1;
+            std::getline(std::cin, dump);
+            Mode mode = (x == 2 ? Mode::Med : Mode::Vid);
+
+            auto visi = skaityti_studentus(path);
+            if (visi.empty()) {
+                std::cout << "Failas tuscias arba nepavyko nuskaityti.\n";
+                continue;
+            }
+
+            std::vector<Student> varg, kiet;
+            varg.reserve(visi.size());
+            kiet.reserve(visi.size());
+
+            auto g = [mode](const Student& st) {
+                return (mode == Mode::Vid ? st.getGalVid() : st.getGalMed());
+            };
+
+            for (const auto& st : visi) {
+                if (g(st) <= 5.0) varg.push_back(st);
+                else              kiet.push_back(st);
+            }
+
+            std::sort(varg.begin(), varg.end(),
+                      [&](const Student& a, const Student& b) {
+                          return g(a) > g(b);
+                      });
+
+            std::sort(kiet.begin(), kiet.end(),
+                      [&](const Student& a, const Student& b) {
+                          return g(a) > g(b);
+                      });
+
+            rasyti_grupe("vargsiukai.txt", varg, mode);
+            rasyti_grupe("kietiakiai.txt", kiet, mode);
             continue;
         }
 
