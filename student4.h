@@ -12,24 +12,21 @@ class Zmogus {
 protected:
     std::string pavarde_;
     std::string vardas_;
-
 public:
     Zmogus() : pavarde_(), vardas_() {}
     Zmogus(const std::string& pav, const std::string& var)
         : pavarde_(pav), vardas_(var) {}
-
-    Zmogus(const Zmogus&)            = default;
+    Zmogus(const Zmogus&) = default;
     Zmogus& operator=(const Zmogus&) = default;
     virtual ~Zmogus() = 0;
-    
-    inline const std::string& getPavarde() const { return pavarde_; }
-    inline const std::string& getVardas()  const { return vardas_;  }
 
-    inline void setPavarde(const std::string& pav) { pavarde_ = pav; }
-    inline void setVardas(const std::string& var)  { vardas_  = var; }
+    const std::string& getPavarde() const { return pavarde_; }
+    const std::string& getVardas()  const { return vardas_;  }
+    void setPavarde(const std::string& pav) { pavarde_ = pav; }
+    void setVardas(const std::string& var)  { vardas_  = var; }
 };
 
-virtual Zmogus::~Zmogus() {} 
+inline Zmogus::~Zmogus() {}
 
 class Studentas : public Zmogus {
 private:
@@ -41,49 +38,49 @@ private:
     static double vidurkis(const std::vector<double>& v) {
         if (v.empty()) return 0.0;
         double sum = std::accumulate(v.begin(), v.end(), 0.0);
-        return sum / static_cast<double>(v.size());
+        return sum / v.size();
     }
 
     static double mediana(std::vector<double> v) {
         if (v.empty()) return 0.0;
         std::sort(v.begin(), v.end());
         size_t n = v.size();
-        if (n % 2 == 1) return v[n / 2];
-        return (v[n / 2 - 1] + v[n / 2]) / 2.0;
+        if (n % 2 == 1) return v[n/2];
+        return (v[n/2 - 1] + v[n/2]) / 2.0;
     }
 
     void perskaiciuotiIsPirminiu() {
-        double vid = vidurkis(nd_);
-        double med = mediana(nd_);
-        galVid_ = 0.4 * egzaminas_ + 0.6 * vid;
-        galMed_ = 0.4 * egzaminas_ + 0.6 * med;
+        galVid_ = 0.4 * egzaminas_ + 0.6 * vidurkis(nd_);
+        galMed_ = 0.4 * egzaminas_ + 0.6 * mediana(nd_);
     }
 
 public:
+
     Studentas()
         : Zmogus(), nd_(), egzaminas_(0.0), galVid_(0.0), galMed_(0.0) {}
 
-    Student(const std::string& pav, const std::string& var, double vid, double med)
-        : Zmogus(var, pav), nd_(), egzaminas_(0.0), galVid_(vid), galMed_(med) {}
+    Studentas(const std::string& pav, const std::string& var, double vid, double med)
+        : Zmogus(pav, var), nd_(), egzaminas_(0.0), galVid_(vid), galMed_(med) {}
 
-    Student(const std::string& pav, const std::string& var,
-            const std::vector<double>& nd, double egz)
-        : Zmogus(pav, var),
-          nd_(nd), egzaminas_(egz) {
+    Studentas(const std::string& pav, const std::string& var,
+              const std::vector<double>& nd, double egz)
+        : Zmogus(pav, var), nd_(nd), egzaminas_(egz) {
         perskaiciuotiIsPirminiu();
     }
 
-    Student(const Student& kitas)
-        : pavarde_(kitas.pavarde_),
-          vardas_(kitas.vardas_),
-          nd_(kitas.nd_),
-          egzaminas_(kitas.egzaminas_),
+
+    Studentas(const Studentas& kitas)
+        : Zmogus(kitas),  
+          nd_(kitas.nd_), 
+          egzaminas_(kitas.egzaminas_), 
           galVid_(kitas.galVid_),
-          galMed_(kitas.galMed_) {}
+          galMed_(kitas.galMed_)
+    {
+    }
 
     Studentas& operator=(const Studentas& kitas) {
-        if (this != &kitas) {
-            Zmogus::operator=(kitas);
+        if (this != &kitas) {    
+            Zmogus::operator=(kitas);  
             nd_        = kitas.nd_;
             egzaminas_ = kitas.egzaminas_;
             galVid_    = kitas.galVid_;
@@ -91,58 +88,41 @@ public:
         }
         return *this;
     }
-    
-    ~Studentas() override = default;
 
-    inline double getGalVid()             const { return galVid_;  }
-    inline double getGalMed()             const { return galMed_;  }
-
-    inline const std::vector<double>& getNd() const { return nd_; }
-    inline double getEgz() const { return egzaminas_; }
+    ~Studentas() override { }
 
 
-    inline void setGalVid(double v) { galVid_ = v; }
-    inline void setGalMed(double m) { galMed_ = m; }
+    double getGalVid() const { return galVid_; }
+    double getGalMed() const { return galMed_; }
+    const std::vector<double>& getNd() const { return nd_; }
+    double getEgz() const { return egzaminas_; }
 
-    inline void setNd(const std::vector<double>& nd) {
+
+    void setNd(const std::vector<double>& nd) {
         nd_ = nd;
         perskaiciuotiIsPirminiu();
     }
-    inline void setEgz(double egz) {
+    void setEgz(double egz) {
         egzaminas_ = egz;
         perskaiciuotiIsPirminiu();
     }
 
-    friend std::istream& operator>>(std::istream& is, Student& st);
-    friend std::ostream& operator<<(std::ostream& os, const Student& st);
+    friend std::istream& operator>>(std::istream&, Studentas&);
+    friend std::ostream& operator<<(std::ostream&, const Studentas&);
 };
 
-inline std::istream& operator>>(std::istream& is, Student& st) {
-    std::string pav, var;
-    double vid;
-
-    if (!(is >> pav >> var >> vid))
-        return is;
-
-    double med;
-    if (is.peek() != '\n' && is.peek() != EOF) {
-        if (!(is >> med)) med = vid;
-    } else {
-        med = vid;
-    }
-    st.nd_.clear();
-    st.egzaminas_ = 0.0;
-    st.galVid_    = vid;
-    st.galMed_    = med;
+inline std::istream& operator>>(std::istream& is, Studentas& st) {
+    double nd;
+    while (is >> nd) st.nd_.push_back(nd);
+    is >> st.egzaminas_;
+    st.perskaiciuotiIsPirminiu();
     return is;
 }
-inline std::ostream& operator<<(std::ostream& os, const Student& st) {
-    os << st.pavarde_ << ' '
-       << st.vardas_  << ' '
-       << st.galVid_  << ' '
-       << st.galMed_;
+
+inline std::ostream& operator<<(std::ostream& os, const Studentas& st) {
+    os << st.getPavarde() << " " << st.getVardas() << " "
+       << st.getGalVid() << " " << st.getGalMed();
     return os;
 }
 
 using Student = Studentas;
-
